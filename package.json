@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.4.2",
     "framer-motion": "^12.23.26",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.562.0",
@@ -17,6 +19,8 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.11.0",
     "react-webcam": "^7.2.0",
+    "sweetalert2": "^11.26.17",
+    "three": "^0.182.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

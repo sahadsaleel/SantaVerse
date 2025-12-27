@@ -9,9 +9,42 @@ const BackgroundMusic = () => {
     const MUSIC_URL = "https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3?filename=christmas-background-music-124965.mp3";
 
     useEffect(() => {
-        // Try auto-play with low volume
-        if (audioRef.current) {
-            audioRef.current.volume = 0.3;
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        audio.volume = 0.3;
+
+        // Attempt to autoplay
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                setIsPlaying(true);
+            }).catch(() => {
+                // Autoplay was prevented.
+                setIsPlaying(false);
+                // Add a one-time listener to play on first interaction
+                const handleInteraction = () => {
+                    audio.play().then(() => {
+                        setIsPlaying(true);
+                        // Clean up listeners once successful
+                        document.removeEventListener('click', handleInteraction);
+                        document.removeEventListener('touchstart', handleInteraction);
+                        document.removeEventListener('keydown', handleInteraction);
+                    }).catch(e => console.error("Play failed after interaction:", e));
+                };
+
+                document.addEventListener('click', handleInteraction);
+                document.addEventListener('touchstart', handleInteraction);
+                document.addEventListener('keydown', handleInteraction);
+
+                // Cleanup on unmount (if it happens before interaction)
+                return () => {
+                    document.removeEventListener('click', handleInteraction);
+                    document.removeEventListener('touchstart', handleInteraction);
+                    document.removeEventListener('keydown', handleInteraction);
+                };
+            });
         }
     }, []);
 
@@ -19,10 +52,11 @@ const BackgroundMusic = () => {
         if (audioRef.current) {
             if (isPlaying) {
                 audioRef.current.pause();
+                setIsPlaying(false);
             } else {
-                audioRef.current.play().catch(e => console.log("Audio play failed (interaction required)", e));
+                audioRef.current.play().catch(e => console.log("Audio play failed on toggle", e));
+                setIsPlaying(true);
             }
-            setIsPlaying(!isPlaying);
         }
     };
 
@@ -32,7 +66,10 @@ const BackgroundMusic = () => {
 
             <button
                 onClick={togglePlay}
-                className="w-12 h-12 bg-[#D42426] rounded-full flex items-center justify-center text-white shadow-lg shadow-red-900/50 hover:scale-110 transition-transform"
+                className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 hover:scale-110 ${isPlaying
+                        ? 'bg-[#165B33] shadow-green-900/50 animate-pulse-slow'
+                        : 'bg-[#D42426] shadow-red-900/50 animate-bounce'
+                    }`}
                 title={isPlaying ? "Mute Music" : "Play Music"}
             >
                 {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}

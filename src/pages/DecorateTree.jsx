@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { mockBackend } from '../services/mockBackend';
 import { Download, Share2, RotateCw, Trash2, Camera } from 'lucide-react';
 import tree1 from '../assets/christmas-tree-png-31857.png';
@@ -91,35 +92,96 @@ const DecorateTree = () => {
     };
 
     // Capture & Share logic
+    // Capture & Share logic
     const handleShare = async () => {
         if (!treeRef.current) return;
 
         // 1. Check User Session
         let username = mockBackend.getUsername();
         if (!username) {
-            username = prompt("Please enter your name to share your creation! 🎅");
-            if (!username) return; // Cancelled
+            // SweetAlert2 Prompt
+            const { value: name } = await Swal.fire({
+                title: 'What is your name? 🎅',
+                input: 'text',
+                inputLabel: 'So Santa knows who made this masterpiece!',
+                inputPlaceholder: 'Enter your name...',
+                confirmButtonColor: '#D42426',
+                confirmButtonText: 'Start Sharing',
+                background: '#0F3D2E',
+                color: '#fff',
+                customClass: {
+                    input: 'text-center'
+                },
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You need to write something!'
+                    }
+                }
+            });
+
+            if (!name) return; // Cancelled
+            username = name;
             mockBackend.setUsername(username);
         }
 
         try {
+            console.log("Starting capture...");
             // 2. Capture
             const canvas = await html2canvas(treeRef.current, {
                 useCORS: true, // For images
-                scale: 2 // High res
+                scale: 2, // High res
+                backgroundColor: null, // Transparent bg where possible
+                logging: false
             });
-            const image = canvas.toDataURL("image/png");
+            console.log("Capture complete");
+
+            // Compression: Use JPEG with 0.8 quality to fit in localStorage
+            const image = canvas.toDataURL("image/jpeg", 0.8);
 
             // 3. Save to Backend
-            mockBackend.addToGallery({ username, image });
+            console.log("Saving to gallery...", username);
+            try {
+                const item = mockBackend.addToGallery({ username, image });
+                console.log("Saved item:", item);
+            } catch (storageErr) {
+                console.error("Storage failed", storageErr);
+                if (storageErr.name === 'QuotaExceededError' || storageErr.code === 22) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gallery Full!',
+                        text: 'Please clear some space or try a simpler tree.',
+                        confirmButtonColor: '#D42426',
+                        background: '#0F3D2E',
+                        color: '#fff'
+                    });
+                    return;
+                }
+                throw storageErr;
+            }
 
             // 4. Redirect
-            alert(`🎄 Beautiful tree, ${username}! Shared to gallery.`);
+            await Swal.fire({
+                title: 'Shared!',
+                text: `🎄 Beautiful tree, ${username}! Shared to gallery.`,
+                icon: 'success',
+                confirmButtonColor: '#165B33',
+                background: '#0F3D2E',
+                color: '#fff',
+                timer: 2000,
+                timerProgressBar: true
+            });
             navigate('/gallery');
 
         } catch (err) {
             console.error("Share failed", err);
-            alert("Oh no! The elves dropped the camera. Try again.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'The elves dropped the camera. Try again.',
+                confirmButtonColor: '#D42426',
+                background: '#0F3D2E',
+                color: '#fff'
+            });
         }
     };
 
@@ -153,16 +215,17 @@ const DecorateTree = () => {
                     {/* Overlay to dim background slightly for tree focus */}
                     <div className="absolute inset-0 bg-black/10 pointer-events-none" />
 
-                    {/* The Tree Container */}
-                    <div className="absolute inset-0 flex items-end justify-center pointer-events-none pb-0">
+                    {/* The Tree Container - Aligned to Bottom Center */}
+                    <div className="absolute inset-0 flex items-end justify-center pointer-events-none pb-0 z-0">
+                        {/* Container ensures tree sits on the "floor" across all backgrounds */}
                         <div
-                            className="relative w-[350px] md:w-[550px] h-[450px] md:h-[700px] transition-transform duration-500"
+                            className="relative w-auto h-[75%] md:h-[85%] aspect-[2/3] transition-transform duration-500 origin-bottom"
                             style={{ transform: `scaleX(${treeRotation === 1 ? -1 : 1})` }}
                         >
                             <img
                                 src={activeTree.img}
                                 alt="Realistic Christmas Tree"
-                                className="w-full h-full object-contain object-bottom filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
+                                className="w-full h-full object-contain object-bottom filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
                             />
                         </div>
                     </div>

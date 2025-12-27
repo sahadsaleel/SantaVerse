@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import { motion, AnimatePresence } from 'framer-motion';
 import { mockBackend } from '../services/mockBackend';
 import { Heart, Eye, Share2, Link as LinkIcon } from 'lucide-react';
@@ -22,7 +23,22 @@ const Gallery = () => {
     const copyLink = (id) => {
         // Fake link
         navigator.clipboard.writeText(`https://santaverse.demo/gallery/${id}`);
-        alert("Link copied to clipboard! (Simulation)");
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: 'Link copied to clipboard!'
+        });
     };
 
     return (

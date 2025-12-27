@@ -4,10 +4,11 @@ import { Send, User, Share2, Download, Sparkles, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { mockBackend } from '../services/mockBackend';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const SantaChat = () => {
     const navigate = useNavigate();
-    const [step, setStep] = useState('ASK_NAME'); // ASK_NAME, ASK_AGE, CHAT_MODE
+    const [step, setStep] = useState('ASK_NAME');
     const [userInfo, setUserInfo] = useState({ name: '', age: '' });
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
@@ -17,9 +18,14 @@ const SantaChat = () => {
     const messagesEndRef = useRef(null);
     const wishCardRef = useRef(null);
 
+    const hasGreeted = useRef(false);
+
     // Initial Greeting
     useEffect(() => {
-        addMessage({ sender: 'santa', text: "Ho ho ho! Merry Christmas! 🎅 I'm Santa Claus. What is your name?" });
+        if (!hasGreeted.current) {
+            addMessage({ sender: 'santa', text: "Ho ho ho! Merry Christmas! 🎅 I'm Santa Claus. What is your name?" });
+            hasGreeted.current = true;
+        }
     }, []);
 
     const addMessage = (msg) => {
@@ -43,7 +49,7 @@ const SantaChat = () => {
             if (step === 'ASK_NAME') {
                 // Extract clean name
                 let name = input.trim();
-                const prefixes = ["i am ", "i'm ", "my name is ", "it is ", "it's "];
+                const prefixes = ["i am ", "i'm ", "my name is ", "it is ", "it's ", " hai i am", "hi i am"];
 
                 for (const prefix of prefixes) {
                     if (name.toLowerCase().startsWith(prefix)) {
@@ -127,7 +133,14 @@ const SantaChat = () => {
                 link.click();
             } else if (action === 'share') {
                 mockBackend.addToGallery({ username: userInfo.name, image });
-                alert("Ho ho ho! Your wish has been shared to the Gallery! 🎄");
+                Swal.fire({
+                    title: 'Ho ho ho!',
+                    text: 'Your wish has been shared to the Gallery! 🎄',
+                    icon: 'success',
+                    confirmButtonColor: '#D42426',
+                    background: '#0F3D2E',
+                    color: '#fff'
+                });
                 navigate('/gallery');
             }
         } catch (err) {
