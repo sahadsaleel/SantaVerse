@@ -8,7 +8,7 @@
 <img width="1552" height="900" alt="Screenshot 2025-12-27 171046" src="https://github.com/user-attachments/assets/2aa9d0f0-661f-4bc7-b639-52df0cc1855a" />
 
 
-## ✨ Features
+##  Features
 
 - **🏠 Home**: A beautiful, animated landing page with falling snow and festive music.
 - **📸 Meet Santa**: Take a photo with a realistic Santa Claus using your webcam! Features drag-and-drop positioning and resizing.
@@ -22,7 +22,7 @@
 - **🖼️ Gallery**: A community space to view decorations shared by others.
 - **🎵 Atmosphere**: Persistent background music and global snowfall effect.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
@@ -34,7 +34,7 @@
     - `sweetalert2`: For beautiful, themed alerts and prompts.
     - `uuid`: For unique ID generation.
 
-## 🚀 Setup Instructions
+##  Setup Instructions
 
 1.  **Clone the repository**
     ```bash
@@ -56,7 +56,4 @@
     ```bash
     npm run build
     ```
-
 ---
-
-Made with ❤️ and 🎄 Spirit.
