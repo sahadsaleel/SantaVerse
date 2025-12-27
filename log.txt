@@ -1,0 +1,20 @@
+
+> santaverse@0.0.0 build
+> vite build
+
+[36mvite v7.3.0 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 19 modules transformed.
+[31m✗[39m Build failed in 392ms
+[31merror during build:
+[31m[vite:css] [postcss] It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.[31m
+file: [36mD:/Sahad Saleel/SantaVerse/src/index.css:undefined:NaN[31m
+    at Ha (file:///D:/Sahad%20Saleel/SantaVerse/node_modules/tailwindcss/dist/chunk-CT46QCH7.mjs:38:1643)
+    at LazyResult.runOnRoot (D:\Sahad Saleel\SantaVerse\node_modules\postcss\lib\lazy-result.js:361:16)
+    at LazyResult.runAsync (D:\Sahad Saleel\SantaVerse\node_modules\postcss\lib\lazy-result.js:290:26)
+    at async runPostCSS (file:///D:/Sahad%20Saleel/SantaVerse/node_modules/vite/dist/node/chunks/config.js:30144:19)
+    at async compilePostCSS (file:///D:/Sahad%20Saleel/SantaVerse/node_modules/vite/dist/node/chunks/config.js:30128:6)
+    at async compileCSS (file:///D:/Sahad%20Saleel/SantaVerse/node_modules/vite/dist/node/chunks/config.js:30058:26)
+    at async Object.handler (file:///D:/Sahad%20Saleel/SantaVerse/node_modules/vite/dist/node/chunks/config.js:29591:54)
+    at async transform (file:///D:/Sahad%20Saleel/SantaVerse/node_modules/rollup/dist/es/shared/node-entry.js:21234:16)
+    at async ModuleLoader.addModuleSource (file:///D:/Sahad%20Saleel/SantaVerse/node_modules/rollup/dist/es/shared/node-entry.js:21448:36)[39m

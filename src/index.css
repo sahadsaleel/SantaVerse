@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Outfit:wght@300;400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-christmas-red: #D42426;
+  --color-christmas-green: #165B33;
+  --color-gold: #F8B229;
+  --color-snow: #F0F4F8;
+  --color-dark-green: #0F3D2E;
+  --color-text: #2E2E2E;
+  --color-bg: #0F3D2E;
+  /* Dark green background for immersive feel */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-snow);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Mountains of Christmas', cursive;
+  color: var(--color-gold);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.3s ease;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark-green);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-christmas-red);
+  border-radius: 5px;
+}
+
+/* Utility Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
